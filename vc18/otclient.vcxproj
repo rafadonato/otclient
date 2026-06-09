@@ -170,8 +170,8 @@
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\include\luajit;
-		$(VcpkgInstalledDir)\include\;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -196,8 +196,8 @@
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\include\luajit;
-        $(VcpkgInstalledDir)\include\;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -222,8 +222,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\include\luajit;
-        $(VcpkgInstalledDir)\include\;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -252,8 +252,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\include\luajit;
-        $(VcpkgInstalledDir)\include\;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -284,8 +284,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\include\luajit;
-        $(VcpkgInstalledDir)\include\;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -313,8 +313,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\include\luajit;
-        $(VcpkgInstalledDir)\include\;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
+        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -333,7 +333,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalOptions>/IGNORE:4286 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>freetype.lib;libEGL.lib;libGLESv2.lib;dxgi.lib;d3d9.lib;d3d11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>synchronization.lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -745,4 +744,7 @@
     </ItemGroup>
   </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg.targets" Condition="Exists('$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg.targets')" />
+  </ImportGroup>
 </Project>

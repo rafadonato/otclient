@@ -12,20 +12,16 @@ function UIMessageBox.create(title, okCallback, cancelCallback)
 end
 
 function UIMessageBox.display(title, message, buttons, onEnterCallback, onEscapeCallback)
-    local rootWidth = rootWidget and rootWidget:getWidth() or 956
-    local rootHeight = rootWidget and rootWidget:getHeight() or 656
     local staticSizes = {
         width = {
-            max = math.min(916, math.max(260, rootWidth - 40)),
-            min = 246
+            max = 916,
+            min = 116
         },
         height = {
             min = 56,
-            max = math.min(616, math.max(120, rootHeight - 40))
+            max = 616
         }
     }
-    local horizontalPadding = 32
-    local maxContentWidth = staticSizes.width.max - horizontalPadding
     local currentSizes = {
         width = 0,
         height = 0
@@ -36,11 +32,10 @@ function UIMessageBox.display(title, message, buttons, onEnterCallback, onEscape
     messageBox.title:setText(title)
 
     messageBox.content = messageBox:getChildById('content')
-    messageBox.content:setTextWrap(true)
-    messageBox.content:setWidth(maxContentWidth)
     messageBox.content:setText(message)
     messageBox.content:resizeToText()
-    currentSizes.width = currentSizes.width + math.min(maxContentWidth, math.max(messageBox.content:getWidth(), messageBox.content:getTextSize().width)) + horizontalPadding
+    messageBox.content:resize(messageBox.content:getWidth(), messageBox.content:getHeight())
+    currentSizes.width = currentSizes.width + messageBox.content:getWidth() + 32
     currentSizes.height = currentSizes.height + messageBox.content:getHeight() + 20
 
     messageBox.holder = messageBox:getChildById('holder')
@@ -58,15 +53,7 @@ function UIMessageBox.display(title, message, buttons, onEnterCallback, onEscape
         end
     end
 
-    local finalWidth = math.min(staticSizes.width.max, math.max(staticSizes.width.min, currentSizes.width))
-    messageBox:setWidth(finalWidth)
-    messageBox.content:setWidth(finalWidth - horizontalPadding)
-    messageBox.content:resizeToText()
-
-    currentSizes.height = messageBox.content:getHeight() + 20 + 22
-    if #buttons > 0 then
-        currentSizes.height = currentSizes.height + 42
-    end
+    messageBox:setWidth(math.min(staticSizes.width.max, math.max(staticSizes.width.min, currentSizes.width)))
     messageBox:setHeight(math.min(staticSizes.height.max, math.max(staticSizes.height.min, currentSizes.height)))
 
     if onEnterCallback then

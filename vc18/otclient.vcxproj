@@ -37,37 +37,37 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='OpenGL|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DirectX|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DirectX|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -130,43 +130,38 @@
     <TargetName>$(ProjectName)_dx_x64</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='OpenGL|Win32'">
-    <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
-    <VcpkgTriplet>x86-windows-static-release</VcpkgTriplet>
+    <VcpkgHostTriplet>
+    </VcpkgHostTriplet>
+    <VcpkgTriplet>x86-windows-static</VcpkgTriplet>
     <VcpkgConfiguration>Release</VcpkgConfiguration>
-    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\..\vcpkg_installed\msbuild-win32-release</VcpkgInstalledDir>
+    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\vcpkg_installed</VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DirectX|Win32'" Label="Vcpkg">
-    <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
-    <VcpkgTriplet>x86-windows-static-release</VcpkgTriplet>
+    <VcpkgHostTriplet />
+    <VcpkgTriplet>x86-windows-static</VcpkgTriplet>
     <VcpkgConfiguration>Release</VcpkgConfiguration>
-    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\..\vcpkg_installed\msbuild-win32-release</VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'" Label="Vcpkg">
-    <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
-    <VcpkgTriplet>x64-windows-static-release</VcpkgTriplet>
+    <VcpkgHostTriplet />
+    <VcpkgTriplet>x64-windows-static</VcpkgTriplet>
     <VcpkgConfiguration>Release</VcpkgConfiguration>
-    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\..\vcpkg_installed\msbuild-x64-release</VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DirectX|x64'" Label="Vcpkg">
-    <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
-    <VcpkgTriplet>x64-windows-static-release</VcpkgTriplet>
+    <VcpkgHostTriplet />
+    <VcpkgTriplet>x64-windows-static</VcpkgTriplet>
     <VcpkgConfiguration>Release</VcpkgConfiguration>
-    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\..\vcpkg_installed\msbuild-x64-release</VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
     <VcpkgAutoLink>true</VcpkgAutoLink>
-    <VcpkgAdditionalInstallOptions>--overlay-triplets="$(MSBuildProjectDirectory)\..\cmake\triplets" --binarysource=clear --binarysource=files,$(VcpkgRoot)\binary-cache,readwrite</VcpkgAdditionalInstallOptions>
+    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\vcpkg_installed</VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
     <VcpkgTriplet>x86-windows-static</VcpkgTriplet>
-    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\..\vcpkg_installed\msbuild-win32-debug</VcpkgInstalledDir>
+    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\vcpkg_installed</VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Vcpkg">
-    <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
     <VcpkgTriplet>x64-windows-static</VcpkgTriplet>
-    <VcpkgInstalledDir>$(MSBuildProjectDirectory)\..\vcpkg_installed\msbuild-x64-debug</VcpkgInstalledDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -175,8 +170,8 @@
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
-		$(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
+        $(VcpkgInstalledDir)\include\luajit;
+		$(VcpkgInstalledDir)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -201,8 +196,8 @@
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
+        $(VcpkgInstalledDir)\include\luajit;
+        $(VcpkgInstalledDir)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -227,8 +222,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
+        $(VcpkgInstalledDir)\include\luajit;
+        $(VcpkgInstalledDir)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -257,8 +252,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
+        $(VcpkgInstalledDir)\include\luajit;
+        $(VcpkgInstalledDir)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -289,8 +284,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
+        $(VcpkgInstalledDir)\include\luajit;
+        $(VcpkgInstalledDir)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -318,8 +313,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\luajit;
-        $(VcpkgInstalledDir)\$(VcpkgTriplet)\include\;
+        $(VcpkgInstalledDir)\include\luajit;
+        $(VcpkgInstalledDir)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -338,6 +333,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalOptions>/IGNORE:4286 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>freetype.lib;libEGL.lib;libGLESv2.lib;dxgi.lib;d3d9.lib;d3d11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>synchronization.lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -727,19 +723,16 @@
   <Target Name="DisplayRunProtoCompileValue" BeforeTargets="ProtoCompile">
     <Message Text="RunProtoCompile value: $(RunProtoCompile)" Importance="high" />
   </Target>
-  <PropertyGroup Condition="'$(RunProtoCompile)'=='true'">
+  <PropertyGroup>
     <ProtocPath>$(VcpkgInstalledDir)\$(VcpkgTriplet)\tools\protobuf\protoc.exe</ProtocPath>
-    <ProtoPath>$(SourcePath)protobuf</ProtoPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(RunProtoCompile)'=='false'">
-    <ProtocPath>$(VcpkgInstalledDir)\$(VcpkgTriplet)\tools\protobuf\protoc.exe</ProtocPath>
-    <ProtoPath>$(SourcePath)protobuf</ProtoPath>
+    <ProtoPath>$(MSBuildProjectDirectory)\..\src\protobuf</ProtoPath>
+    <ProtoOutDir>$(MSBuildProjectDirectory)\generated</ProtoOutDir>
   </PropertyGroup>
   <ItemGroup>
     <ProtoFiles Include="$(ProtoPath)\*.proto" />
   </ItemGroup>
   <Target Name="ProtoCompile" BeforeTargets="PrepareForBuild" DependsOnTargets="VcpkgInstallManifestDependencies" Condition="'$(RunProtoCompile)'=='true'">
-    <Exec Command="&quot;$(ProtocPath)&quot; --proto_path=&quot;$(ProtoPath)&quot; --cpp_out=&quot;generated&quot; &quot;%(ProtoFiles.Identity)&quot;" />
+    <Exec Command="&quot;$(ProtocPath)&quot; --proto_path=&quot;$(ProtoPath)&quot; --cpp_out=&quot;$(ProtoOutDir)&quot; &quot;%(ProtoFiles.Identity)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <ItemGroup>
       <ClCompile Include="generated\%(ProtoFiles.Filename).pb.cc">
         <IncludeInUnityFile>false</IncludeInUnityFile>
@@ -752,7 +745,4 @@
     </ItemGroup>
   </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg.targets" Condition="'$(_ZVcpkgRoot)'=='' and '$(VcpkgRoot)'!='' and Exists('$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg.targets')" />
-  </ImportGroup>
 </Project>

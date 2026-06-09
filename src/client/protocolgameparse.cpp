@@ -2585,7 +2585,7 @@ void ProtocolGame::parsePlayerStats(const InputMessagePtr& msg) const
 
     const uint64_t experience = g_game.getFeature(Otc::GameDoubleExperience) ? msg->getU64() : msg->getU32();
     const uint16_t level = g_game.getFeature(Otc::GameLevelU16) ? msg->getU16() : msg->getU8();
-    const uint16_t levelPercent = g_game.getFeature(Otc::GameLevelPercentU16) ? msg->getU16() : static_cast<uint16_t>(msg->getU8());
+    const uint16_t levelPercent = g_game.getFeature(Otc::GameLevelPercentU16) ? msg->getU16() / 100 : static_cast<uint16_t>(msg->getU8());
 
     if (g_game.getFeature(Otc::GameExperienceBonus)) {
         if (g_game.getClientVersion() <= 1096) {
@@ -3813,39 +3813,23 @@ void ProtocolGame::parseChangeMapAwareRange(const InputMessagePtr& msg)
 void ProtocolGame::parseCreaturesMark(const InputMessagePtr& msg)
 {
     const uint32_t creatureId = msg->getU32();
+    const bool isPermanent = g_game.getClientVersion() >= 1076 ? msg->getU8() == 0 : false;
+    const uint8_t markType = msg->getU8();
+
     const auto& creature = g_map.getCreatureById(creatureId);
-    const bool isLegacyProtocol = g_game.getClientVersion() < 1076;
-    uint8_t squareType;
-    uint8_t squareColor;
-
-    if (isLegacyProtocol) {
-        squareType = 0;
-        squareColor = msg->getU8();
-    } else {
-        squareType = msg->getU8();
-        squareColor = msg->getU8();
-    }
-
     if (!creature) {
-        g_logger.traceDebug("ProtocolGame::parseCreaturesMark: could not get creature with id {}", creatureId);
+        g_logger.traceDebug("ProtocolGame::parseTrappers: could not get creature with id {}", creatureId);
         return;
     }
 
-    if (isLegacyProtocol) {
-        creature->addTimedSquare(squareColor);
-        return;
-    }
-
-    if (squareType == 0) {
-        creature->hideStaticSquare();
-        creature->removeTimedSquare();
-        return;
-    }
-
-    if (squareType == 2) {
-        creature->showStaticSquare(Color::from8bit(squareColor != 0 ? squareColor : 1));
+    if (isPermanent) {
+        if (markType == 0xff) {
+            creature->hideStaticSquare();
+        } else {
+            creature->showStaticSquare(Color::from8bit(markType != 0 ? markType : 1));
+        }
     } else {
-        creature->addTimedSquare(squareColor);
+        creature->addTimedSquare(markType);
     }
 }
 
@@ -5126,7 +5110,7 @@ void ProtocolGame::parseMonkData(const InputMessagePtr& msg) {
         }
         case Otc::TYPES_MONK_VIRTUE: {
             const uint8_t virtueValue = msg->getU8();
-            g_logger.debug("Unused {} TO-DO L4381", virtueValue);
+            g_logger.debug("unused {} TO-DO L4381", virtueValue);
             break;
         }
         default:

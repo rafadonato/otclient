@@ -544,7 +544,7 @@ function checkNumber(self, text)
 end
 
 function onLevelChange(localPlayer, value, percent)
-  XPAnalyser:setupLevel(value, percent)
+  XPAnalyser:setupLevel(value, localPlayer:getLevelPercent())
 end
 
 function managerDropTracker(itemId, checked)

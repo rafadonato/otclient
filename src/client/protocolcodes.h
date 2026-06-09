@@ -384,7 +384,8 @@ namespace Proto
         ClientWheelGemAction = 231, // 0xE7 usado em gemas, desabilitado para ClientRuleViolation = 231
         ClientDebugReport = 232,
         ClientPreyAction = 235,
-        ClientPreyRequest = 237,
+        ClientPreyRequest = 237, // ClientSendResourceBalance = 237, // 0xED
+        ClientSendResourceBalance = ClientPreyRequest,
         ClientTransferCoins = 239,
         ClientRequestQuestLog = 240,
         ClientRequestQuestLine = 241,

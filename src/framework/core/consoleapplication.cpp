@@ -28,6 +28,8 @@
 #include <framework/core/asyncdispatcher.h>
 #include <framework/stdext/time.h>
 
+#include <iostream>
+
 #ifdef FW_NET
 #include <framework/net/connection.h>
 #endif

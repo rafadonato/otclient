@@ -245,7 +245,7 @@ namespace datdump {
 
         bool success = true;
         if (request.outputPath.empty()) {
-            std::cout << payload << '\n';
+            std::cout << payload << std::endl;
         } else {
             std::ofstream out(request.outputPath, std::ios::out | std::ios::trunc);
             if (!out) {

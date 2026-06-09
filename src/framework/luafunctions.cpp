@@ -168,8 +168,6 @@ void Application::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_crypt", "rsaSetPublicKey", &Crypt::rsaSetPublicKey, &g_crypt);
     g_lua.bindSingletonFunction("g_crypt", "rsaSetPrivateKey", &Crypt::rsaSetPrivateKey, &g_crypt);
     g_lua.bindSingletonFunction("g_crypt", "rsaGetSize", &Crypt::rsaGetSize, &g_crypt);
-    g_lua.bindSingletonFunction("g_crypt", "crc32", &Crypt::crc32, &g_crypt);
-    g_lua.bindSingletonFunction("g_crypt", "sha256", &Crypt::sha256, &g_crypt);
 
     // Clock
     g_lua.registerSingletonClass("g_clock");
@@ -253,7 +251,6 @@ void Application::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_resources", "searchAndAddPackages", &ResourceManager::searchAndAddPackages, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "removeSearchPath", &ResourceManager::removeSearchPath, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "fileExists", &ResourceManager::fileExists, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "fileExistsInWorkDir", &ResourceManager::fileExistsInWorkDir, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "directoryExists", &ResourceManager::directoryExists, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "getRealDir", &ResourceManager::getRealDir, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "getWorkDir", &ResourceManager::getWorkDir, &g_resources);
@@ -264,7 +261,6 @@ void Application::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_resources", "listDirectoryFiles", &ResourceManager::listDirectoryFiles, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "getDirectoryFiles", &ResourceManager::getDirectoryFiles, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "readFileContents", &ResourceManager::readFileContents, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "readFileContentsFromWorkDir", &ResourceManager::readFileContentsFromWorkDir, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "writeFileContents", &ResourceManager::writeFileContents, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "guessFilePath", &ResourceManager::guessFilePath, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "isFileType", &ResourceManager::isFileType, &g_resources);
@@ -274,14 +270,6 @@ void Application::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_resources", "deleteFile", &ResourceManager::deleteFile, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "resolvePath", &ResourceManager::resolvePath, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "fileChecksum", &ResourceManager::fileChecksum, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "fileSha256", &ResourceManager::fileSha256, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "fileSha256InWorkDir", &ResourceManager::fileSha256InWorkDir, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "writeDownloadedFile", &ResourceManager::writeDownloadedFile, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "writeDownloadedFileToWorkDir", &ResourceManager::writeDownloadedFileToWorkDir, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "extractDownloadedArchive", &ResourceManager::extractDownloadedArchive, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "extractDownloadedArchiveToWorkDir", &ResourceManager::extractDownloadedArchiveToWorkDir, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "extractDownloadedZip", &ResourceManager::extractDownloadedZip, &g_resources);
-    g_lua.bindSingletonFunction("g_resources", "writeFileContentsToWorkDir", &ResourceManager::writeFileContentsToWorkDir, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "filesChecksums", &ResourceManager::filesChecksums, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "selfChecksum", &ResourceManager::selfChecksum, &g_resources);
     g_lua.bindSingletonFunction("g_resources", "updateFiles", &ResourceManager::updateFiles, &g_resources);

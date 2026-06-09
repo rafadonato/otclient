@@ -94,7 +94,11 @@ function ForgeController:show(skipRequest)
     if not g_game.getFeature(GameForgeConvergence) then
         return ForgeController:hide()
     end
-    resetInfo()
+
+    if not skipRequest then
+        resetInfo()
+    end
+
     local needsReload = not self.ui or self.ui:isDestroyed()
     if needsReload then
         self:loadHtml('game_forge.html')
@@ -117,6 +121,15 @@ function ForgeController:show(skipRequest)
         ForgeButton:setOn(true)
     end
 
+    if ForgeController.rawOpenForgeData then
+        applyForgeOpenData(ForgeController.rawOpenForgeData)
+    end
+
+    if ForgeController.rawData then
+        forgeData(ForgeController.rawData)
+    end
+
+    self:toggleFusionMenu()
     self:updateResourceBalances()
 end
 
@@ -138,17 +151,13 @@ function ForgeController:hide()
 end
 
 function ForgeController:toggle()
-    ForgeController:toggleConversionMenu()
-    resetInfo()
-    if ForgeController.rawData then
-        forgeData(ForgeController.rawData)
-    end
     if not self.ui or self.ui:isDestroyed() then
         self:show()
         return
     end
 
     if self.ui:isVisible() then
+        resetInfo()
         self:hide()
     else
         self:show()
@@ -881,29 +890,24 @@ local function handleParseConvergenceFusionItems(data)
     return data, parsedItemsBySlot
 end
 
-function onOpenForge(data)
-    ForgeController.rawOpenForgeData = data
-    
-    -- Don't update if we're showing the result animation or waiting for result
-    if ForgeController.showResult or ForgeController.showBonus or ForgeController.waitingForResult then
+local function applyForgeOpenData(data)
+    if not data then
         return
     end
-    
+
     ForgeController.fusion.chanceImprovedChecked = false
     ForgeController.fusion.reduceTierLossChecked = false
     ForgeController.conversion.dustMax = data.dustLevel or ForgeController.conversion.dustMax or 100
 
-    -- FUSION ITEMS
     local items = cloneValue(data.fusionItems or {})
     local fusionItems = handleFusionItems(items)
     ForgeController.fusion.items = fusionItems
     replaceTableContents(ForgeController.fusion.currentList, fusionItems)
+
     local convergenceFusion = cloneValue(data.convergenceFusion or {})
     local _, convergenceItemsBySlot = handleParseConvergenceFusionItems(convergenceFusion)
     ForgeController.fusion.convergenceItems = convergenceItemsBySlot
-    -- FUSION ITEMS
 
-    -- TRANSFER ITEMS
     local transfers = cloneValue(data.transfers or {})
     local transferItems = handleTransferItems(transfers)
     ForgeController.transfer.items = transferItems
@@ -912,11 +916,22 @@ function onOpenForge(data)
     local convergenceTransfers = cloneValue(data.convergenceTransfers or {})
     local convergenceTransferItems = handleTransferItems(convergenceTransfers)
     ForgeController.transfer.convergenceItems = convergenceTransferItems
-    -- TRANSFER ITEMS
+end
+
+function onOpenForge(data)
+    ForgeController.rawOpenForgeData = data
+
+    -- Don't update if we're showing the result animation or waiting for result
+    if ForgeController.showResult or ForgeController.showBonus or ForgeController.waitingForResult then
+        return
+    end
+
+    applyForgeOpenData(data)
 
     local shouldShow = not ForgeController.ui or ForgeController.ui:isDestroyed() or not ForgeController.ui:isVisible()
     if shouldShow then
         ForgeController:show(true)
+    else
         ForgeController:toggleFusionMenu()
     end
 end

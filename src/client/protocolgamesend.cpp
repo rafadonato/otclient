@@ -1480,14 +1480,28 @@ void ProtocolGame::sendPreyAction(const uint8_t slot, const uint8_t actionType, 
 void ProtocolGame::sendPreyRequest()
 {
     const auto& msg = std::make_shared<OutputMessage>();
-    msg->addU8(Proto::ClientPreyRequest);
+    msg->addU8(Proto::ClientSendResourceBalance);
+    send(msg);
+}
+
+void ProtocolGame::sendResourceBalanceRequest(const Otc::ResourceTypes_t resourceType)
+{
+    const auto& msg = std::make_shared<OutputMessage>();
+    msg->addU8(Proto::ClientSendResourceBalance);
+    msg->addU8(static_cast<uint8_t>(resourceType));
     send(msg);
 }
 
 void ProtocolGame::sendOpenPortableForge() {
+    // Empty 0xED requests the portable forge item list (server responds with 0x87).
     const auto& msg = std::make_shared<OutputMessage>();
-    msg->addU8(Proto::ClientPreyRequest);
+    msg->addU8(Proto::ClientSendResourceBalance);
     send(msg);
+
+    // Official client also requests forge resources via 0xED + resource type.
+    sendResourceBalanceRequest(Otc::RESOURCE_FORGE_DUST);
+    sendResourceBalanceRequest(Otc::RESOURCE_FORGE_SLIVER);
+    sendResourceBalanceRequest(Otc::RESOURCE_FORGE_CORES);
 }
 
 void ProtocolGame::sendForgeRequest(Otc::ForgeAction_t actionType, bool convergence, uint16_t firstItemid, uint8_t firstItemTier, uint16_t secondItemId, bool improveChance, bool tierLoss) {

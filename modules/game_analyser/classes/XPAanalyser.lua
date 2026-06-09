@@ -76,7 +76,7 @@ end
 local targetMaxMargin = 142
 
 function expForLevel(level)
-  return math.floor((50*level*level*level)/3 - 100*level*level + (850*level)/3 - 200)
+  return math.floor((((level - 6) * level + 17) * level - 12) / 6 * 100)
 end
 
 function expToAdvance(currentLevel, currentExp)

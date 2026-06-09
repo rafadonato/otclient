@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_ALLOW_DEBUG_INCLUDE enabled)
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(

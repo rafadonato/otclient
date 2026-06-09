@@ -136,6 +136,7 @@ public:
     void sendMarketAcceptOffer(uint32_t timestamp, uint16_t counter, uint16_t amount);
     void sendPreyAction(uint8_t slot, uint8_t actionType, uint16_t index);
     void sendPreyRequest();
+    void sendResourceBalanceRequest(Otc::ResourceTypes_t resourceType);
     void sendOpenPortableForge();
     void sendForgeRequest(Otc::ForgeAction_t actionType, bool convergence = false, uint16_t firstItemid = 0, uint8_t firstItemTier = 0, uint16_t secondItemId = 0, bool improveChance = false, bool tierLoss = false);
     void sendForgeBrowseHistoryRequest(uint16_t page);
@@ -338,42 +339,7 @@ private:
     void parseModalDialog(const InputMessagePtr& msg);
     void parseExtendedOpcode(const InputMessagePtr& msg);
     void parseChangeMapAwareRange(const InputMessagePtr& msg);
-
-    /**
-     * @brief Parses and applies the creature mark (square) received from the server.
-     *
-     * The server sends a mark for a creature identified by its ID. The mark is represented
-     * by a square drawn around the creature and can be:
-     * - Removed
-     * - Temporary (flashing / timed)
-     * - Permanent (static)
-     *
-     * @param msg Input message containing:
-     * - uint32 creatureId: Target creature identifier.
-     * - For clientVersion >= 1076:
-     *   - uint8  squareType: Square behavior type:
-     *     - 0 = SQUARE_REMOVE: remove any square (static and timed)
-     *     - 1 = SQUARE_FLASH: temporary (timed/flashing)
-     *     - 2 = SQUARE_STAY : permanent (static)
-     *   - uint8 squareColor: 8-bit color used by the square.
-     * - For clientVersion < 1076:
-     *   - uint8 markType: Legacy timed square color.
-     *
-     * @note If the creature cannot be found in the map, the function logs a debug trace
-     *       and returns without doing anything.
-     *
-     * Behavior rules:
-     * - If @c squareType == 0:
-     *   Removes any square (static and timed).
-     * - If @c squareType == 2:
-     *   Shows a permanent/static square using @c squareColor (where 0 maps to the default color).
-     * - Otherwise:
-     *   Adds a timed square using @c squareColor.
-     * - For clientVersion < 1076, any single byte value is treated as legacy
-     *   timed-square color; @c markType == 0 uses the default color.
-     */
     void parseCreaturesMark(const InputMessagePtr& msg);
-
     // 12x
     void parseShowDescription(const InputMessagePtr& msg);
     void parseBestiaryTracker(const InputMessagePtr& msg);

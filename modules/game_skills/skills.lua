@@ -562,7 +562,7 @@ function toggleAllSkillBars()
 end
 
 function expForLevel(level)
-    return math.floor((50 * level * level * level) / 3 - 100 * level * level + (850 * level) / 3 - 200)
+    return math.floor((((level - 6) * level + 17) * level - 12) / 6 * 100)
 end
 
 function expToAdvance(currentLevel, currentExp)
@@ -1105,7 +1105,7 @@ function onLevelChange(localPlayer, value, percent)
     if not localPlayer then
         return
     end
-    percent = percent or localPlayer:getLevelPercent()
+    percent = localPlayer:getLevelPercent()
     setSkillValue('level', comma_value(value))
     local text = tr('You have %s percent to go', 100 - percent)
     setSkillPercent('level', percent, text)

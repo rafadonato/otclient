@@ -379,7 +379,7 @@ void LocalPlayer::setLevel(const uint16_t level, const uint16_t levelPercent)
 
 uint16_t LocalPlayer::getLevelPercent()
 {
-    return g_game.getFeature(Otc::GameLevelPercentU16) ? m_levelPercent / 100 : m_levelPercent;
+    return m_levelPercent;
 }
 
 void LocalPlayer::setMana(const uint32_t mana, const uint32_t maxMana)

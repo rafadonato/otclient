@@ -6,7 +6,7 @@ Module
   sandboxed: true
   scripts: [ widgets/uigamemap, widgets/uiitem, widgets/statsbar, gameinterface ]
   load-later:
-    - game_walk
+    - game_walking
     - game_joystick
     - game_shortcuts
     - game_minimap

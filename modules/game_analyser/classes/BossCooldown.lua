@@ -94,7 +94,7 @@ function BossCooldown.create()
 		-- Override onKeyPress to unbind movement keys immediately when typing
 		searchText.onKeyPress = function(widget, keyCode, keyboardModifiers)
 			-- Unbind movement keys when user starts typing
-			local gameWalk = modules.game_walk
+			local gameWalk = modules.game_walking
 			if gameWalk then
 				gameWalk.unbindWalkKey("W")
 				gameWalk.unbindWalkKey("D")
@@ -113,7 +113,7 @@ function BossCooldown.create()
 			-- Handle Escape key to clear focus and restore movement
 			if keyCode == KeyEscape then
 				-- Re-bind movement keys
-				local gameWalk = modules.game_walk
+				local gameWalk = modules.game_walking
 				if gameWalk then
 					gameWalk.bindWalkKey("W", North)
 					gameWalk.bindWalkKey("D", East)
@@ -385,7 +385,7 @@ end
 function onBossSearchFocusChange(widget, focused)
 	if focused then
 		-- When gaining focus, unbind movement keys
-		local gameWalk = modules.game_walk
+		local gameWalk = modules.game_walking
 		if gameWalk then
 			gameWalk.unbindWalkKey("W")
 			gameWalk.unbindWalkKey("D")
@@ -402,7 +402,7 @@ function onBossSearchFocusChange(widget, focused)
 		end
 	else
 		-- When losing focus, bind movement keys back
-		local gameWalk = modules.game_walk
+		local gameWalk = modules.game_walking
 		if gameWalk then
 			gameWalk.bindWalkKey("W", North)
 			gameWalk.bindWalkKey("D", East)
@@ -471,7 +471,7 @@ function toggleBossCDFocus(visible)
 		local text = BossCooldown.window.contentsPanel.searchText
 		text:focus()
 		-- Immediately unbind movement keys when search becomes active
-		local gameWalk = modules.game_walk
+		local gameWalk = modules.game_walking
 		if gameWalk then
 			gameWalk.unbindWalkKey("W")
 			gameWalk.unbindWalkKey("D")
@@ -488,7 +488,7 @@ function toggleBossCDFocus(visible)
 		end
 	else
 		-- Re-bind movement keys when search becomes inactive
-		local gameWalk = modules.game_walk
+		local gameWalk = modules.game_walking
 		if gameWalk then
 			gameWalk.bindWalkKey("W", North)
 			gameWalk.bindWalkKey("D", East)

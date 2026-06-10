@@ -370,7 +370,7 @@ function updateChatMode()
 end
 
 local function unbindMovingKeys()
-    local gameWalk = modules.game_walk
+    local gameWalk = modules.game_walking
     gameWalk.unbindWalkKey('W')
     gameWalk.unbindWalkKey('D')
     gameWalk.unbindWalkKey('S')
@@ -388,7 +388,7 @@ local function unbindMovingKeys()
 end
 
 local function bindMovingKeys()
-    local gameWalk = modules.game_walk
+    local gameWalk = modules.game_walking
     gameWalk.bindWalkKey('W', North)
     gameWalk.bindWalkKey('D', East)
     gameWalk.bindWalkKey('S', South)

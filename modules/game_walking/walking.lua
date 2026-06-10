@@ -5,8 +5,12 @@ local lastTurn = 0
 local nextWalkDir = nil
 local lastWalkDir = nil
 local lastCancelWalkTime = 0
-local joystickActive = false
-local joystickPressTime = 0
+local mobileLastFinishedStep = 0
+local mobileWalkLock = 0
+local mobileLastWalk = 0
+local mobileFirstStep = true
+local mobileAutoWalkEvent = nil
+local MOBILE_FIRST_STEP_DELAY = 200
 
 
 local keys = {
@@ -74,8 +78,8 @@ local function canChangeFloor(pos, deltaZ)
     return fromTile and fromTile:hasElevation(3) and toTile:isWalkable()
 end
 
---- Makes the player walk in the given direction.
-local function walk(dir)
+--- Keyboard / smart-walk movement.
+local function keyboardWalk(dir)
     local player = g_game.getLocalPlayer()
     if not player or g_game.isDead() or player:isDead() then
         return
@@ -126,14 +130,18 @@ local function walk(dir)
     return true
 end
 
---- Mobile joystick walk: one server step per action (no client pre-walk).
-local function joystickWalk(dir)
+--- Walk in a direction. Optional ticks (mobile joystick) uses otclientv8-style timing.
+function walk(dir, ticks)
+    if ticks == nil then
+        return keyboardWalk(dir)
+    end
     local player = g_game.getLocalPlayer()
     if not player or g_game.isDead() or player:isDead() then
         return
     end
 
     if player:isWalkLocked() then
+        nextWalkDir = nil
         return
     end
 
@@ -141,22 +149,73 @@ local function joystickWalk(dir)
         g_game.cancelFollow()
     end
 
-    local isAutoWalking = player:isAutoWalking()
-    if isAutoWalking or player:isServerWalking() then
+    if player:isAutoWalking() then
         g_game.stop()
-        if isAutoWalking then
-            player:stopAutoWalk()
+        player:stopAutoWalk()
+    end
+
+    local ticksToNextWalk = player:getStepTicksLeft()
+    if not player:canWalk() then
+        if ticksToNextWalk < 500 and (lastWalkDir ~= dir or ticks == 0) then
+            nextWalkDir = dir
         end
-        player:lockWalk(player:getStepDuration() + 50)
+        if ticksToNextWalk < 30 and mobileLastFinishedStep + 400 > g_clock.millis() and nextWalkDir == nil then
+            nextWalkDir = dir
+        end
         return
     end
 
-    if not player:canWalk() then
+    if nextWalkDir ~= nil and nextWalkDir ~= lastWalkDir then
+        dir = nextWalkDir
+    end
+
+    local toPos = Position.translatedToDirection(player:getPosition(), dir)
+    local toTile = g_map.getTile(toPos)
+
+    if mobileWalkLock >= g_clock.millis() and lastWalkDir == dir then
+        nextWalkDir = nil
         return
+    end
+
+    if mobileFirstStep and lastWalkDir == dir and mobileLastWalk + MOBILE_FIRST_STEP_DELAY > g_clock.millis() then
+        mobileFirstStep = false
+        mobileWalkLock = mobileLastWalk + MOBILE_FIRST_STEP_DELAY
+        return
+    end
+
+    mobileFirstStep = (not player:isWalking() and mobileLastFinishedStep + 100 < g_clock.millis()
+        and mobileWalkLock + 100 < g_clock.millis())
+    if player:isServerWalking() then
+        mobileWalkLock = mobileWalkLock + math.max(MOBILE_FIRST_STEP_DELAY, 100)
+    end
+
+    nextWalkDir = nil
+    removeEvent(mobileAutoWalkEvent)
+    mobileAutoWalkEvent = nil
+
+    if toTile and toTile:isWalkable() then
+        if not player:isServerWalking() and g_game.getFeature(GameAllowPreWalk) then
+            player:preWalk(dir)
+        end
+    else
+        if not canChangeFloor(toPos, 1) and not canChangeFloor(toPos, -1) then
+            return
+        end
+    end
+
+    if player:isServerWalking() then
+        g_game.stop()
+        player:lockWalk(200)
+    end
+
+    g_game.walk(dir)
+
+    if not mobileFirstStep and lastWalkDir ~= dir then
+        mobileWalkLock = g_clock.millis() + g_settings.getNumber("walkTurnDelay")
     end
 
     lastWalkDir = dir
-    g_game.walk(dir)
+    mobileLastWalk = g_clock.millis()
 end
 
 --- Adds a walk event with an optional delay.
@@ -168,7 +227,7 @@ local function addWalkEvent(dir, delay)
 
     local action = function()
         if g_keyboard.getModifiers() == KeyboardNoModifier then
-            walk(smartWalkDir or dir)
+            keyboardWalk(smartWalkDir or dir)
         end
     end
 
@@ -262,23 +321,25 @@ local function onTeleport(player, newPos, oldPos)
 
     local delay = (offsetX >= 3 or offsetY >= 3 or offsetZ >= 2) and TELEPORT_DELAY or STAIRS_DELAY
     player:lockWalk(delay)
+    mobileWalkLock = g_clock.millis() + delay
+    nextWalkDir = nil
 end
 
 --- Handles the end of a walking event.
 local function onWalkFinish(player)
-    if nextWalkDir then
-        if not g_game.getFeature(GameAllowPreWalk) then
-            walk(nextWalkDir)
+    mobileLastFinishedStep = g_clock.millis()
+    if nextWalkDir ~= nil then
+        if g_platform.isMobile() and modules.game_joystick.isActive() then
+            removeEvent(mobileAutoWalkEvent)
+            mobileAutoWalkEvent = addEvent(function()
+                if nextWalkDir ~= nil then
+                    walk(nextWalkDir, 0)
+                end
+            end, false)
+        elseif not g_game.getFeature(GameAllowPreWalk) then
+            keyboardWalk(nextWalkDir)
         else
             addWalkEvent(nextWalkDir, 50)
-        end
-    elseif joystickActive and g_platform.isMobile() then
-        local stepDuration = player:getStepDuration()
-        if g_clock.millis() - joystickPressTime >= stepDuration then
-            local dir = modules.game_joystick.getDirection()
-            if dir then
-                joystickWalk(dir)
-            end
         end
     end
 end
@@ -300,6 +361,9 @@ function WalkController:onTerminate()
     unbindKeys()
 end
 
+local function onGameStart()
+end
+
 --- Sets up game-related events for the WalkController.
 function WalkController:onGameStart()
     self:registerEvents(g_game, {
@@ -315,16 +379,6 @@ function WalkController:onGameStart()
     })
 
     modules.game_interface.getRootPanel().onFocusChange = stopSmartWalk
-    modules.game_joystick.addOnJoystickMoveListener(function(dir, firstStep)
-        if firstStep then
-            joystickActive = true
-            joystickPressTime = g_clock.millis()
-            joystickWalk(dir)
-        end
-    end)
-    modules.game_joystick.addOnJoystickReleaseListener(function()
-        joystickActive = false
-    end)
 
     if not g_game.isOfficialTibia() then
         g_game.enableFeature(GameForceFirstAutoWalkStep)
@@ -336,7 +390,8 @@ end
 --- Cleans up resources when the game ends.
 function WalkController:onGameEnd()
     stopSmartWalk()
-    joystickActive = false
+    removeEvent(mobileAutoWalkEvent)
+    mobileAutoWalkEvent = nil
 end
 
 --- Utility functions for binding and unbinding keys.
@@ -379,4 +434,16 @@ function unbindTurnKey(key)
     g_keyboard.unbindKeyDown(key, gameRootPanel)
     g_keyboard.unbindKeyPress(key, gameRootPanel)
     g_keyboard.unbindKeyUp(key, gameRootPanel)
+end
+
+function bindTurnKeys()
+    for _, keyDir in ipairs(turnKeys) do
+        bindTurnKey(keyDir[1], keyDir[2])
+    end
+end
+
+function unbindTurnKeys()
+    for _, keyDir in ipairs(turnKeys) do
+        unbindTurnKey(keyDir[1])
+    end
 end

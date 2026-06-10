@@ -5,6 +5,8 @@ local lastTurn = 0
 local nextWalkDir = nil
 local lastWalkDir = nil
 local lastCancelWalkTime = 0
+local joystickActive = false
+local joystickPressTime = 0
 
 
 local keys = {
@@ -124,6 +126,39 @@ local function walk(dir)
     return true
 end
 
+--- Mobile joystick walk: one server step per action (no client pre-walk).
+local function joystickWalk(dir)
+    local player = g_game.getLocalPlayer()
+    if not player or g_game.isDead() or player:isDead() then
+        return
+    end
+
+    if player:isWalkLocked() then
+        return
+    end
+
+    if g_game.isFollowing() then
+        g_game.cancelFollow()
+    end
+
+    local isAutoWalking = player:isAutoWalking()
+    if isAutoWalking or player:isServerWalking() then
+        g_game.stop()
+        if isAutoWalking then
+            player:stopAutoWalk()
+        end
+        player:lockWalk(player:getStepDuration() + 50)
+        return
+    end
+
+    if not player:canWalk() then
+        return
+    end
+
+    lastWalkDir = dir
+    g_game.walk(dir)
+end
+
 --- Adds a walk event with an optional delay.
 local function addWalkEvent(dir, delay)
     if g_clock.millis() - lastCancelWalkTime > 20 then
@@ -237,6 +272,14 @@ local function onWalkFinish(player)
         else
             addWalkEvent(nextWalkDir, 50)
         end
+    elseif joystickActive and g_platform.isMobile() then
+        local stepDuration = player:getStepDuration()
+        if g_clock.millis() - joystickPressTime >= stepDuration then
+            local dir = modules.game_joystick.getDirection()
+            if dir then
+                joystickWalk(dir)
+            end
+        end
     end
 end
 
@@ -272,8 +315,15 @@ function WalkController:onGameStart()
     })
 
     modules.game_interface.getRootPanel().onFocusChange = stopSmartWalk
-    modules.game_joystick.addOnJoystickMoveListener(function(dir)
-        walk(dir)
+    modules.game_joystick.addOnJoystickMoveListener(function(dir, firstStep)
+        if firstStep then
+            joystickActive = true
+            joystickPressTime = g_clock.millis()
+            joystickWalk(dir)
+        end
+    end)
+    modules.game_joystick.addOnJoystickReleaseListener(function()
+        joystickActive = false
     end)
 
     if not g_game.isOfficialTibia() then
@@ -286,6 +336,7 @@ end
 --- Cleans up resources when the game ends.
 function WalkController:onGameEnd()
     stopSmartWalk()
+    joystickActive = false
 end
 
 --- Utility functions for binding and unbinding keys.

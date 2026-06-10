@@ -121,9 +121,6 @@ function show(text, options, callback) -- callback = function(newText)
   window.text.onTextChange = function(widget, text)
     if validate(text) then
       window.buttons.ok:enable()
-      if g_platform.isMobile() then
-        doneFunc()
-      end
     else
       window.buttons.ok:disable()
     end

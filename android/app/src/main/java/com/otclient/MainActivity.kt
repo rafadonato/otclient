@@ -2,6 +2,7 @@ package com.otclient
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,7 +16,9 @@ class MainActivity : GameActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding.root.keepScreenOn = true
         findViewById<ViewGroup>(contentViewId).addView(binding.root)
 
         androidManager = AndroidManager(

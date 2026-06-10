@@ -87,12 +87,9 @@ end
 function onKeypadTouchRelease(widget, pos, button)
   if button ~= MouseLeftButton then return false end
 
-  keypadMousePos = {x=(pos.x - widget:getPosition().x) / widget:getWidth(), 
-                    y=(pos.y - widget:getPosition().y) / widget:getHeight()}
-
-  firstStep = false
-  executeWalk()
   removeEvent(keypadUpdateEvent)
+  keypadUpdateEvent = nil
+  firstStep = true
 
   keypad.pointer:setMarginTop(0)
   keypad.pointer:setMarginLeft(0)
@@ -110,7 +107,12 @@ function executeWalk()
     return
   end
 
-  keypadUpdateEvent = scheduleEvent(executeWalk, 20)
+  local delay = 20
+  local player = g_game.getLocalPlayer()
+  if player then
+    delay = math.max(50, player:getStepDuration())
+  end
+  keypadUpdateEvent = scheduleEvent(executeWalk, delay)
   keypadMousePos.x = math.min(1, math.max(0, keypadMousePos.x))
   keypadMousePos.y = math.min(1, math.max(0, keypadMousePos.y))
   local angle = math.atan2(keypadMousePos.x - 0.5, keypadMousePos.y - 0.5)
@@ -132,7 +134,7 @@ function executeWalk()
     dir = Directions.SouthEast
   end
 
-  if not dir and (math.abs(keypadMousePos.y - 0.5) > 0.1 or math.abs(keypadMousePos.x - 0.5) > 0.1) then
+  if not dir and (math.abs(keypadMousePos.y - 0.5) > 0.2 or math.abs(keypadMousePos.x - 0.5) > 0.2) then
     if math.abs(keypadMousePos.y - 0.5) > math.abs(keypadMousePos.x - 0.5) then
       if keypadMousePos.y < 0.5 then
         dir = Directions.North
@@ -150,6 +152,7 @@ function executeWalk()
 
   if dir and moveListener then
     moveListener(dir, firstStep)
+    firstStep = false
   end
 end
 
